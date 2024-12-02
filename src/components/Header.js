@@ -1,3 +1,4 @@
+// Header component change to bootstrap header
 const Header = () => {
   return <h1>My Header in another component</h1>;
 };

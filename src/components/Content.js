@@ -1,5 +1,6 @@
 import React from "react";
 
+// Content component
 const Content = () => {
   return (
     <div>
