@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 // Create component
 const CreateTask = () => {
@@ -11,11 +12,24 @@ const CreateTask = () => {
   const [image, setImage] = useState(""); // manages poster state
 
   // Logs data submited to the form to the console
+  // Logs data submited to the form to the console
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(title, description, status, due, image); // Logs data to the console
-  };
 
+    const task = {
+      title: title,
+      description: description,
+      status: status,
+      due: due,
+      image: image,
+    };
+
+    axios
+      .post("http://localhost:4000/api/tasks", task)
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err.data));
+  };
   // Returns the relevant message
   return (
     <div>
@@ -74,7 +88,7 @@ const CreateTask = () => {
           />
         </div>
         {/*Submit button*/}
-        <input type="submit" value="Add Movie" />
+        <input type="submit" value="Add Task" />
       </form>
     </div>
   );

@@ -6,9 +6,10 @@ function ReadTask() {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    axios.get('https://jsonblob.com/api/jsonblob/1313290558235664384')
+    axios
+      .get("http://localhost:4000/api/tasks")
       .then((response) => {
-        setTasks(response.data.tasks);
+        setTasks(response.data);
       })
       .catch((error) => {
         console.log(error);

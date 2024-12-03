@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import Card from "react-bootstrap/Card";
 
-// Logs new movie data to the console
+// Logs new data to the console
 function TaskItem(props) {
   useEffect(() => {
     console.log("Task Item:", props.myTask);
@@ -20,7 +20,7 @@ function TaskItem(props) {
               style={{ width: "100px", height: "100px", marginBottom: "10px" }}
             />
             <footer>
-              Due: {new Date(props.myTask.dueDate).toLocaleDateString()} -{" "}
+              Due: {props.myTask.due} <br />
               <span>Status: {props.myTask.status}</span>
             </footer>
           </blockquote>
