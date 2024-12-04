@@ -1,11 +1,13 @@
-// Enable EXPRESS
+require("dotenv").config();
+const port = process.env.SERVER_PORT || 4000;
 const express = require("express");
 const app = express();
-const port = 4000; // Port number
-
-// Enable COORS to allow communication between app and server
-// This middleware allows your frontend app to make API requests to the backend
 const cors = require("cors");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const multer = require("multer");
+
+// Enable CORS for all requests
 app.use(cors());
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -17,54 +19,54 @@ app.use(function (req, res, next) {
   next();
 });
 
-// body-parser middleware
-const bodyParser = require("body-parser");
+// Parse incoming request bodies in a middleware before handlers
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Database Connection with Mongoose
-const mongoose = require("mongoose");
-mongoose.connect(
-  "mongodb+srv://admin:admin@cluster0.egsdr.mongodb.net/tasksdb"
-);
+// Connect to MongoDB database using Mongoose
+mongoose.connect(process.env.MONGO_URL);
 
-// Database schema and data model:
+// Configure multer for file uploads
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+// Create a schema for tasks
 const taskSchema = new mongoose.Schema({
   title: String,
   description: String,
   status: String,
   due: String,
   image: String,
+  uplImg: {
+    data: Buffer,
+    contentType: String,
+  },
 });
 
+// Create a model for the schema
 const Task = mongoose.model("Task", taskSchema);
 
-// Method to Add Data to MongoDB
-// Updates the db
-app.post("/api/tasks", async (req, res) => {
+// Create a new task in MongoDB database
+app.post("/api/tasks", upload.single("uplImg"), async (req, res) => {
   const { title, description, status, due, image } = req.body;
-
-  const newTask = new Task({ title, description, status, due, image });
+  const uplImg = req.file
+    ? {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      }
+    : null;
+  const newTask = new Task({ title, description, status, due, image, uplImg });
   await newTask.save();
-
   res.status(201).json({ message: "Task created successfully", task: newTask });
 });
 
-// Fetch all movie records
-// It’s sent back in JSON format.
+// Fetch all tasks from MongoDB
 app.get("/api/tasks", async (req, res) => {
   const tasks = await Task.find({});
   res.json(tasks);
 });
 
-// Retrieve Data by ID
-// If a movie is found, it’s sent back in JSON format.
-app.get("/api/tasks/:id", async (req, res) => {
-  const task = await Task.findById(req.params.id);
-  res.send(task);
-});
-
 // Port listener
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`); // Log to the console
+  console.log(`Server is running on http://localhost:${port}`);
 });

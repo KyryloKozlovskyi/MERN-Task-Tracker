@@ -1,97 +1,101 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-// Create component
 const CreateTask = () => {
-  // Adds state variables to functional components
-  // Stores data returned from an API and manages the state of the application.
-  const [title, setTitle] = useState(""); // manages title state
-  const [description, setDescription] = useState(""); // manages year state
-  const [status, setStatus] = useState(""); // manages poster state
-  const [due, setDueDate] = useState(""); // manages poster state
-  const [image, setImage] = useState(""); // manages poster state
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("Pending");
+  const [due, setDueDate] = useState("");
+  const [image, setImage] = useState("");
+  const [uplImg, setUplImage] = useState(null);
 
-  // Logs data submited to the form to the console
-  // Logs data submited to the form to the console
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(title, description, status, due, image); // Logs data to the console
-
-    const task = {
-      title: title,
-      description: description,
-      status: status,
-      due: due,
-      image: image,
-    };
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("status", status);
+    formData.append("due", due);
+    formData.append("image", image);
+    if (uplImg) {
+      formData.append("uplImg", uplImg);
+    }
 
     axios
-      .post("http://localhost:4000/api/tasks", task)
+      .post("http://localhost:4000/api/tasks", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((res) => console.log(res.data))
       .catch((err) => console.log(err.data));
   };
-  // Returns the relevant message
+
   return (
-    <div>
-      <h2>This is my Create Component.</h2>
+    <div className="container mt-5">
+      <h2 className="mb-4">Create Task</h2>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          {/*Input box for task title*/}
-          <label>Add Task Title: </label>
+        <div className="form-group mb-3">
+          <label className="form-label">Title:</label>
           <input
             type="text"
             className="form-control"
             value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-            }}
+            onChange={(e) => setTitle(e.target.value)}
           />
-          {/*Input box for task description*/}
-          <label>Add Task Description: </label>
-          <input
-            type="text"
+        </div>
+        <div className="form-group mb-3">
+          <label className="form-label">Description:</label>
+          <textarea
             className="form-control"
             value={description}
-            onChange={(e) => {
-              setDescription(e.target.value);
-            }}
+            onChange={(e) => setDescription(e.target.value)}
           />
-          {/*Input box for task status*/}
-          <label>Add Task Status: </label>
-          <input
-            type="text"
+        </div>
+        <div className="form-group mb-3">
+          <label className="form-label">Status:</label>
+          <select
             className="form-control"
             value={status}
-            onChange={(e) => {
-              setStatus(e.target.value);
-            }}
-          />
-          {/*Input box for due date*/}
-          <label>Add Task Due Date: </label>
+            onChange={(e) => setStatus(e.target.value)}
+          >
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+        <div className="form-group mb-3">
+          <label className="form-label">Due Date:</label>
           <input
-            type="text"
+            type="date"
             className="form-control"
             value={due}
-            onChange={(e) => {
-              setDueDate(e.target.value);
-            }}
+            onChange={(e) => setDueDate(e.target.value)}
           />
-          {/*Input box for task image*/}
-          <label>Add Task Image: </label>
+        </div>
+        <div className="form-group mb-3">
+          <label className="form-label">Image URL:</label>
           <input
             type="text"
             className="form-control"
             value={image}
-            onChange={(e) => {
-              setImage(e.target.value);
-            }}
+            onChange={(e) => setImage(e.target.value)}
           />
         </div>
-        {/*Submit button*/}
-        <input type="submit" value="Add Task" />
+        <div className="form-group mb-3">
+          <label className="form-label">Upload Image:</label>
+          <input
+            type="file"
+            className="form-control"
+            onChange={(e) => setUplImage(e.target.files[0])}
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Create
+        </button>
       </form>
     </div>
   );
 };
 
-export default CreateTask; // Exports the component
+export default CreateTask;
