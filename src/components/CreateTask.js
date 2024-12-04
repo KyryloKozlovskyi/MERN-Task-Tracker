@@ -8,6 +8,25 @@ const CreateTask = () => {
   const [due, setDueDate] = useState("");
   const [image, setImage] = useState("");
   const [uplImg, setUplImage] = useState(null);
+  const [statusColor, setStatusColor] = useState("text-primary");
+
+  const handleStatusChange = (e) => {
+    const value = e.target.value;
+    setStatus(value);
+    switch (value) {
+      case "Pending":
+        setStatusColor("text-primary");
+        break;
+      case "In Progress":
+        setStatusColor("text-warning");
+        break;
+      case "Completed":
+        setStatusColor("text-success");
+        break;
+      default:
+        setStatusColor("text-primary");
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,13 +74,19 @@ const CreateTask = () => {
         <div className="form-group mb-3">
           <label className="form-label">Status:</label>
           <select
-            className="form-control"
+            className={`form-control ${statusColor}`}
             value={status}
-            onChange={(e) => setStatus(e.target.value)}
+            onChange={handleStatusChange}
           >
-            <option value="Pending">Pending</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
+            <option value="Pending" className="text-primary">
+              Pending
+            </option>
+            <option value="In Progress" className="text-warning">
+              In Progress
+            </option>
+            <option value="Completed" className="text-success">
+              Completed
+            </option>
           </select>
         </div>
         <div className="form-group mb-3">

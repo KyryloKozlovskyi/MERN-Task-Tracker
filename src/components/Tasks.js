@@ -1,12 +1,19 @@
 import React from "react";
 import TaskItem from "./TaskItem";
+import Row from "react-bootstrap/Row";
 
 // Tasks component
 const Tasks = (props) => {
   // Maps the tasks to TaskItem components
-  return props.tasks.map((task) => {
-    return <TaskItem myTask={task} key={task._id} />; // Use index as a temporary unique key
-  });
+  return (
+    <div className="container mt-5">
+      <Row className="g-4">
+        {props.tasks.map((task) => (
+          <TaskItem myTask={task} key={task._id} />
+        ))}
+      </Row>
+    </div>
+  );
 };
 
 export default Tasks; // Exports the component
