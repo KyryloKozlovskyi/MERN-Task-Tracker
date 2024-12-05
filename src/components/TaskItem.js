@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Buffer } from "buffer";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
+import { Link } from "react-router-dom";
 
 // Logs new data to the console
 function TaskItem(props) {
@@ -34,12 +35,20 @@ function TaskItem(props) {
   };
 
   return (
-    <Col xs={12} sm={6} md={4} className="mb-4 px-4">
-      <Card className={`h-100 p-3 ${getStatusColor(props.myTask.status)}`}>
-        <Card.Header>{props.myTask.title}</Card.Header>
+    <Col xs={12} sm={6} md={4} className="mb-4 px-4 ">
+      <Card
+        className={`h-100 p-3 border border-dark ${getStatusColor(
+          props.myTask.status
+        )}`}
+      >
+        <Card.Header className="border border-dark rounded">
+          {props.myTask.title}
+        </Card.Header>
         <Card.Body>
           <blockquote className="blockquote mb-0">
-            <p>{props.myTask.description}</p>
+            <p className="border-bottom border-dark p-2">
+              {props.myTask.description}
+            </p>
             {imageUrl && (
               <div className="d-flex justify-content-center">
                 <img
@@ -56,10 +65,16 @@ function TaskItem(props) {
             )}
           </blockquote>
         </Card.Body>
-        <Card.Footer>
+        <Card.Footer className="border border-dark mb-1 rounded">
           Due: {props.myTask.due} <br />
           <span>Status: {props.myTask.status}</span>
         </Card.Footer>
+        <Link
+          to={"/edit/" + props.myTask._id}
+          className="btn text-white border border-dark"
+        >
+          Edit
+        </Link>
       </Card>
     </Col>
   );

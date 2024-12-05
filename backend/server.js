@@ -55,7 +55,14 @@ app.post("/api/tasks", upload.single("uplImg"), async (req, res) => {
         contentType: req.file.mimetype,
       }
     : null;
-  const newTask = new Task({ title, description, status, due, image, uplImg });
+  const newTask = new Task({
+    title,
+    description,
+    status,
+    due,
+    image,
+    uplImg,
+  });
   await newTask.save();
   res.status(201).json({ message: "Task created successfully", task: newTask });
 });
@@ -64,6 +71,46 @@ app.post("/api/tasks", upload.single("uplImg"), async (req, res) => {
 app.get("/api/tasks", async (req, res) => {
   const tasks = await Task.find({});
   res.json(tasks);
+});
+
+// Fetch a single task by ID from MongoDB
+app.get("/api/task/:id", async (req, res) => {
+  let task = await Task.findById({ _id: req.params.id });
+  res.send(task);
+});
+
+// Update a task by ID in MongoDB
+app.put("/api/task/:id", upload.single("uplImg"), async (req, res) => {
+  try {
+    const { title, description, status, due, image } = req.body;
+    const uplImg = req.file
+      ? {
+          data: req.file.buffer,
+          contentType: req.file.mimetype,
+        }
+      : null;
+
+    const updatedTask = await Task.findByIdAndUpdate(
+      req.params.id,
+      {
+        title,
+        description,
+        status,
+        due,
+        image,
+        uplImg,
+      },
+      { new: true }
+    );
+
+    if (!updatedTask) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.json({ message: "Task updated successfully", task: updatedTask });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
 });
 
 // Port listener

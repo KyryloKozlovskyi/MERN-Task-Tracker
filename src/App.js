@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import Content from "./components/Content";
 import ReadTask from "./components/ReadTask";
 import CreateTask from "./components/CreateTask";
+import EditTask from "./components/EditTask";
 
 // App component with routing
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/home" element={<Content />} />
         <Route path="/read" element={<ReadTask />} />
         <Route path="/create" element={<CreateTask />} />
+        <Route path="/edit/:id" element={<EditTask />} />
       </Routes>
       <Footer />
     </Router>
