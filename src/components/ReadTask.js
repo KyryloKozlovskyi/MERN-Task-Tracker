@@ -16,10 +16,22 @@ function ReadTask() {
       });
   }, []);
 
+  const Reload = () => {
+    console.log("Reloading task data...");
+    axios
+      .get("http://localhost:4000/api/tasks ")
+      .then((response) => {
+        setTasks(response.data);
+      })
+      .catch((error) => {
+        console.error("Error reloading data:", error);
+      });
+  };
+
   return (
     <div>
       <h2>This is my Read Component.</h2>
-      <Tasks tasks={tasks} />
+      <Tasks tasks={tasks} ReloadData={Reload}x />
     </div>
   );
 }

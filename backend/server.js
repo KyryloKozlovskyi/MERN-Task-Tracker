@@ -113,6 +113,11 @@ app.put("/api/task/:id", upload.single("uplImg"), async (req, res) => {
   }
 });
 
+app.delete("/api/task/:id", async (req, res) => {
+  console.log("Deleting task with ID:", req.params.id);
+  const task = await Task.findByIdAndDelete(req.params.id);
+  res.status(200).send({ message: "Task deleted successfully", task });
+});
 // Port listener
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

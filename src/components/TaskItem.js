@@ -4,6 +4,9 @@ import { Buffer } from "buffer";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import { Link } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+
+import axios from "axios";
 
 // Logs new data to the console
 function TaskItem(props) {
@@ -34,6 +37,17 @@ function TaskItem(props) {
     }
   };
 
+  const handleDelete = (e) => {
+    e.preventDefault();
+    axios
+      .delete(`http://localhost:4000/api/task/${props.myTask._id}`)
+      .then(() => {
+        props.Reload(); // Refresh the task list after deletion
+      })
+      .catch((error) => {
+        console.error("Error deleting task:", error);
+      });
+  };
   return (
     <Col xs={12} sm={6} md={4} className="mb-4 px-4 ">
       <Card
@@ -75,6 +89,12 @@ function TaskItem(props) {
         >
           Edit
         </Link>
+        <div>
+          {/* Other movie details */}
+          <Button variant="danger" onClick={handleDelete}>
+            Delete
+          </Button>
+        </div>
       </Card>
     </Col>
   );

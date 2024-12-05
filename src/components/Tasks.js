@@ -9,7 +9,7 @@ const Tasks = (props) => {
     <div className="container mt-5">
       <Row className="g-4">
         {props.tasks.map((task) => (
-          <TaskItem myTask={task} key={task._id} />
+          <TaskItem myTask={task} key={task._id} Reload={props.ReloadData} />
         ))}
       </Row>
     </div>
