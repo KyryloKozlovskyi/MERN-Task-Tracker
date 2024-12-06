@@ -32,10 +32,12 @@ function ReadTask() {
   };
 
   return (
-    <div>
-      <h2>This is my Read Component.</h2>
-      {/* Pass tasks and reload functionality as props to Tasks component */}
-      <Tasks tasks={tasks} ReloadData={Reload} />
+    <div className="container mt-5">
+      <div>
+        <h2>Registered Tasks</h2>
+        {/* Pass tasks and reload functionality as props to Tasks component */}
+        <Tasks tasks={tasks} ReloadData={Reload} />
+      </div>
     </div>
   );
 }

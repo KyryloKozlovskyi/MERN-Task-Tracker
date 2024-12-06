@@ -5,7 +5,6 @@ import FavoriteTasks from "./components/FavoriteTasks";
 import ReadTask from "./components/ReadTask";
 import CreateTask from "./components/CreateTask";
 import EditTask from "./components/EditTask";
-import "./components/Styles/App.css";
 
 // Main App Component
 // Provides routing and overall structure of the application
@@ -17,6 +16,7 @@ function App() {
         {/* Main content area with dynamic routing */}
         <div className="flex-grow-1">
           <Routes>
+            <Route path="/" element={<FavoriteTasks />} />
             <Route path="/favoriteTasks" element={<FavoriteTasks />} />
             <Route path="/getTasks" element={<ReadTask />} />
             <Route path="/createTask" element={<CreateTask />} />

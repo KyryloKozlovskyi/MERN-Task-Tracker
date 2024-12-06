@@ -8,7 +8,6 @@ const EditTask = () => {
   const navigate = useNavigate(); // Navigation hook for redirection
 
   // State variables for task fields
-  const [_id, setId] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("Pending");
@@ -23,7 +22,6 @@ const EditTask = () => {
       .get(`http://localhost:4000/api/task/${id}`)
       .then((response) => {
         const task = response.data; // Extract task data
-        setId(task._id);
         setTitle(task.title);
         setDescription(task.description);
         setStatus(task.status);

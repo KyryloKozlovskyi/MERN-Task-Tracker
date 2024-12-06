@@ -31,10 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Connect to MongoDB using Mongoose
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(process.env.MONGO_URL);
 
 // Configure Multer for handling file uploads in memory
 const storage = multer.memoryStorage();
@@ -51,6 +48,7 @@ const taskSchema = new mongoose.Schema({
     data: Buffer, // Image data stored in binary
     contentType: String, // Type of the uploaded image (e.g., "image/png")
   },
+  isFavorite: { type: Boolean, default: false }, // New field to track if the task is a favorite
 });
 
 // Create a Mongoose model for tasks
@@ -99,6 +97,16 @@ app.get("/api/task/:id", async (req, res) => {
   res.json(task);
 });
 
+// Fetch all favorite tasks
+app.get("/api/favorite-tasks", async (req, res) => {
+  try {
+    const favoriteTasks = await Task.find({ isFavorite: true });
+    res.json(favoriteTasks);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
 // 4. Update an existing task
 app.put("/api/task/:id", upload.single("uplImg"), async (req, res) => {
   try {
@@ -131,6 +139,23 @@ app.put("/api/task/:id", upload.single("uplImg"), async (req, res) => {
     }
 
     res.json({ message: "Task updated successfully", task: updatedTask });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+// Toggle favorite status of a task
+app.put("/api/task/:id/favorite", async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    task.isFavorite = !task.isFavorite;
+    await task.save();
+
+    res.json({ message: "Favorite status updated", task });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }

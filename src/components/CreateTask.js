@@ -65,7 +65,7 @@ const CreateTask = () => {
 
   return (
     <div className="container mt-5">
-      <h2 className="mb-4">Create Task</h2>
+      <h2 className="mb-4">Create a New Task</h2>
       <form onSubmit={handleSubmit}>
         {/* Title Input */}
         <div className="form-group mb-3">
