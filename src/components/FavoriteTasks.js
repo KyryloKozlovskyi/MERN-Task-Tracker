@@ -20,6 +20,18 @@ const FavoriteTasks = () => {
       });
   }, []); // Empty dependency array ensures this runs only once on mount
 
+  // Function to reload favorite tasks
+  const Reload = () => {
+    axios
+      .get("http://localhost:4000/api/favorite-tasks")
+      .then((response) => {
+        setFavoriteTasks(response.data); // Update state with the new data
+      })
+      .catch((error) => {
+        console.error("Error reloading favorite tasks:", error);
+      });
+  };
+
   return (
     <div className="container mt-5">
       <h2 className="mb-4">Favorite Tasks</h2>
@@ -27,7 +39,7 @@ const FavoriteTasks = () => {
       <Container className="mt-5">
         {favoriteTasks.length > 0 ? (
           favoriteTasks.map((task) => (
-            <TaskItem key={task._id} myTask={task} /> // Render each task using TaskItem
+            <TaskItem key={task._id} myTask={task} Reload={Reload} /> // Render each task using TaskItem
           ))
         ) : (
           <p>No favorite tasks available. Add some tasks to your favorites!</p>
