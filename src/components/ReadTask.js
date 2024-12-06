@@ -4,7 +4,7 @@ import axios from "axios";
 
 // Component to fetch and display tasks
 function ReadTask() {
-  const [tasks, setTasks] = useState([]); // State to store task data
+  const [tasks, setTasks] = useState([]);
 
   // Fetch tasks from the API when the component mounts
   useEffect(() => {
@@ -14,7 +14,7 @@ function ReadTask() {
         setTasks(response.data); // Set fetched tasks to state
       })
       .catch((error) => {
-        console.log("Error fetching tasks:", error); // Log errors to console
+        console.log("Error fetching tasks:", error);
       });
   }, []); // Empty dependency array ensures this runs only once on mount
 
@@ -27,7 +27,7 @@ function ReadTask() {
         setTasks(response.data); // Update state with the new data
       })
       .catch((error) => {
-        console.error("Error reloading data:", error); // Log errors during reload
+        console.error("Error reloading data:", error);
       });
   };
 

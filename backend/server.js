@@ -1,7 +1,7 @@
 // Load environment variables from .env file
 require("dotenv").config();
 
-// Define the server port, defaulting to 4000 if not specified
+// Server port, default 4000
 const port = process.env.SERVER_PORT || 4000;
 
 // Import required modules
@@ -31,7 +31,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Connect to MongoDB using Mongoose
-mongoose.connect(process.env.MONGO_URL);
+mongoose
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((error) => {
+    console.error("Error connecting to MongoDB:", error);
+    process.exit(1); // Exit the process if the database connection fails
+  });
 
 // Configure Multer for handling file uploads in memory
 const storage = multer.memoryStorage();
@@ -39,16 +48,16 @@ const upload = multer({ storage: storage });
 
 // Define a Mongoose schema for tasks
 const taskSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  status: String,
-  due: String,
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  status: { type: String, required: true },
+  due: { type: String, required: true },
   image: String, // URL of the image
   uplImg: {
     data: Buffer, // Image data stored in binary
     contentType: String, // Type of the uploaded image (e.g., "image/png")
   },
-  isFavorite: { type: Boolean, default: false }, // New field to track if the task is a favorite
+  isFavorite: { type: Boolean, default: false }, // True if the task is a favorite
 });
 
 // Create a Mongoose model for tasks
@@ -56,45 +65,60 @@ const Task = mongoose.model("Task", taskSchema);
 
 // API Routes
 
-// 1. Create a new task
+// Create a new task
 app.post("/api/tasks", upload.single("uplImg"), async (req, res) => {
-  const { title, description, status, due, image } = req.body;
+  try {
+    const { title, description, status, due, image } = req.body;
 
-  // If an image is uploaded, process it
-  const uplImg = req.file
-    ? {
-        data: req.file.buffer,
-        contentType: req.file.mimetype,
-      }
-    : null;
+    if (!title || !description || !status || !due) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
 
-  // Create and save the new task
-  const newTask = new Task({
-    title,
-    description,
-    status,
-    due,
-    image,
-    uplImg,
-  });
-  await newTask.save();
+    const uplImg = req.file
+      ? {
+          data: req.file.buffer,
+          contentType: req.file.mimetype,
+        }
+      : null;
 
-  res.status(201).json({ message: "Task created successfully", task: newTask });
-});
-
-// 2. Fetch all tasks
-app.get("/api/tasks", async (req, res) => {
-  const tasks = await Task.find({});
-  res.json(tasks);
-});
-
-// 3. Fetch a single task by its ID
-app.get("/api/task/:id", async (req, res) => {
-  const task = await Task.findById(req.params.id);
-  if (!task) {
-    return res.status(404).json({ message: "Task not found" });
+    const newTask = new Task({
+      title,
+      description,
+      status,
+      due,
+      image,
+      uplImg,
+    });
+    await newTask.save();
+    res
+      .status(201)
+      .json({ message: "Task created successfully", task: newTask });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
   }
-  res.json(task);
+});
+
+// Fetch all tasks
+app.get("/api/tasks", async (req, res) => {
+  try {
+    const tasks = await Task.find({});
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+// Fetch a single task by its ID
+app.get("/api/task/:id", async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    res.json(task);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
 });
 
 // Fetch all favorite tasks
@@ -107,12 +131,15 @@ app.get("/api/favorite-tasks", async (req, res) => {
   }
 });
 
-// 4. Update an existing task
+// Update an existing task
 app.put("/api/task/:id", upload.single("uplImg"), async (req, res) => {
   try {
     const { title, description, status, due, image } = req.body;
 
-    // If an image is uploaded, process it
+    if (!title || !description || !status || !due) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
     const uplImg = req.file
       ? {
           data: req.file.buffer,
@@ -120,18 +147,10 @@ app.put("/api/task/:id", upload.single("uplImg"), async (req, res) => {
         }
       : null;
 
-    // Find and update the task
     const updatedTask = await Task.findByIdAndUpdate(
       req.params.id,
-      {
-        title,
-        description,
-        status,
-        due,
-        image,
-        uplImg,
-      },
-      { new: true } // Return the updated document
+      { title, description, status, due, image, uplImg },
+      { new: true }
     );
 
     if (!updatedTask) {
@@ -154,14 +173,13 @@ app.put("/api/task/:id/favorite", async (req, res) => {
 
     task.isFavorite = !task.isFavorite;
     await task.save();
-
     res.json({ message: "Favorite status updated", task });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
 });
 
-// 5. Delete a task by its ID
+// Delete a task by its ID
 app.delete("/api/task/:id", async (req, res) => {
   try {
     const task = await Task.findByIdAndDelete(req.params.id);
@@ -172,6 +190,11 @@ app.delete("/api/task/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
+});
+
+// Global error handler for uncaught routes
+app.use((req, res) => {
+  res.status(404).json({ message: "Endpoint not found" });
 });
 
 // Start the server and listen on the specified port

@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+/* Dark/Light theme switch styles */
+body.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+body.dark {
+  background-color: #383738;
+  color: #ffffff;
+}

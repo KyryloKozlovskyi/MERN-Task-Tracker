@@ -16,8 +16,8 @@ function TaskItem(props) {
     console.log("Task Item:", props.myTask);
   }, [props.myTask]);
 
-  // Generate the image URL (Base64 or regular URL)
-  const imageUrl = props.myTask.uplImg
+  // Display the uploaded image if available
+  const imgUpl = props.myTask.uplImg
     ? `data:${props.myTask.uplImg.contentType};base64,${Buffer.from(
         props.myTask.uplImg.data
       ).toString("base64")}`
@@ -89,10 +89,10 @@ function TaskItem(props) {
               {props.myTask.description}
             </p>
             {/* Display Task Image if available */}
-            {imageUrl && (
+            {imgUpl && (
               <div className="d-flex justify-content-center">
                 <img
-                  src={imageUrl}
+                  src={imgUpl}
                   alt={props.myTask.title}
                   className="img-fluid"
                   style={{
@@ -112,7 +112,7 @@ function TaskItem(props) {
           <span>Status: {props.myTask.status}</span>
         </Card.Footer>
 
-        {/* Action Buttons for Edit and Delete */}
+        {/* Action Buttons for Edit and Delete and Favorite */}
         <div className="d-flex justify-content-between">
           <Button
             className="border border-dark mb-1 rounded"

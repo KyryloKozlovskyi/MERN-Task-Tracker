@@ -5,7 +5,7 @@ import axios from "axios";
 // Component for editing an existing task
 const EditTask = () => {
   const { id } = useParams(); // Extract task ID from route parameters
-  const navigate = useNavigate(); // Navigation hook for redirection
+  const navigate = useNavigate();
 
   // State variables for task fields
   const [title, setTitle] = useState("");
@@ -14,7 +14,7 @@ const EditTask = () => {
   const [due, setDueDate] = useState("");
   const [image, setImage] = useState(""); // Task image URL
   const [uplImg, setUplImage] = useState(null); // Task uploaded image file
-  const [statusColor, setStatusColor] = useState("text-primary"); // Status-specific styling
+  const [statusColor, setStatusColor] = useState("text-primary"); // Status styling
 
   // Fetch task data from the server on component mount
   useEffect(() => {
@@ -28,7 +28,7 @@ const EditTask = () => {
         setDueDate(task.due);
         setImage(task.image);
         setUplImage(task.uplImg);
-        setStatusColor(getStatusColor(task.status)); // Set status color based on status
+        setStatusColor(getStatusColor(task.status));
       })
       .catch((error) => {
         console.log("Error fetching task data:", error);

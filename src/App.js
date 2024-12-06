@@ -6,7 +6,7 @@ import ReadTask from "./components/ReadTask";
 import CreateTask from "./components/CreateTask";
 import EditTask from "./components/EditTask";
 import React, { useState } from "react";
-import "./components/Styles/App.css"; // Adjust the path to your CSS file
+import "./App.css";
 
 // Main App Component
 function App() {
@@ -19,9 +19,9 @@ function App() {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
-  // Persist theme in localStorage and apply it to the root div
+  // Store theme state in localStorage
   React.useEffect(() => {
-    localStorage.setItem("theme", theme); // Save to localStorage
+    localStorage.setItem("theme", theme);
     document.body.className = theme; // Set theme class on body
   }, [theme]);
 
@@ -31,6 +31,7 @@ function App() {
         {/* Pass theme and toggleTheme to NavigationBar */}
         <NavigationBar theme={theme} toggleTheme={toggleTheme} />
         <div className="flex-grow-1">
+          {/* Routes */}
           <Routes>
             <Route path="/" element={<FavoriteTasks />} />
             <Route path="/favoriteTasks" element={<FavoriteTasks />} />
