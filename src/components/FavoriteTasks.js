@@ -1,7 +1,6 @@
 import React from "react";
 
-// Content component
-const Content = () => {
+const FavoriteTasks = () => {
   return (
     <div>
       <h1>Hello World!</h1>
@@ -10,4 +9,4 @@ const Content = () => {
   );
 };
 
-export default Content;
+export default FavoriteTasks;

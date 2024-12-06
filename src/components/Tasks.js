@@ -2,12 +2,13 @@ import React from "react";
 import TaskItem from "./TaskItem";
 import Row from "react-bootstrap/Row";
 
-// Tasks component
+// Tasks Component
+// Displays a list of tasks by mapping them to individual TaskItem components
 const Tasks = (props) => {
-  // Maps the tasks to TaskItem components
   return (
     <div className="container mt-5">
       <Row className="g-4">
+        {/* Map over tasks and render a TaskItem for each task */}
         {props.tasks.map((task) => (
           <TaskItem myTask={task} key={task._id} Reload={props.ReloadData} />
         ))}
@@ -16,4 +17,4 @@ const Tasks = (props) => {
   );
 };
 
-export default Tasks; // Exports the component
+export default Tasks;
