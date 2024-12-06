@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import TaskItem from "./TaskItem"; // Import TaskItem component
+import { Container } from "react-bootstrap";
 
 const FavoriteTasks = () => {
   const [favoriteTasks, setFavoriteTasks] = useState([]);
@@ -22,11 +22,11 @@ const FavoriteTasks = () => {
   return (
     <div className="container mt-5">
       <h2 className="mb-4">Favorite Tasks</h2>
-      <Row>
+      <Container className="mt-5">
         {favoriteTasks.map((task) => (
-          <TaskItem key={task._id} myTask={task} Reload={() => {}} /> // Pass necessary props
+          <TaskItem key={task._id} myTask={task} /> // Pass necessary props
         ))}
-      </Row>
+      </Container>
     </div>
   );
 };

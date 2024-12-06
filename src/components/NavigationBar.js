@@ -1,34 +1,38 @@
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import { useLocation } from "react-router-dom";
+import React from "react";
+import { Navbar, Nav, Container } from "react-bootstrap";
+import Switch from "react-switch";
 
-// NavigationBar Component
-// Provides a navigation menu to switch between different pages
-const NavigationBar = () => {
-  const location = useLocation();
-
+const NavigationBar = ({ theme, toggleTheme }) => {
   return (
-    <Navbar bg="dark" data-bs-theme="dark">
+    <Navbar
+      bg={theme === "light" ? "light" : "dark"}
+      variant={theme}
+      expand="lg"
+    >
       <Container>
-        <Navbar.Brand href="/favoriteTasks">TaskTracker</Navbar.Brand>
+        <Navbar.Brand href="/">TaskTracker</Navbar.Brand>
         <Nav className="me-auto">
-          <Nav.Link
-            href="/favoriteTasks"
-            active={location.pathname === "/favoriteTasks"}
-          >
-            Favorite Tasks
-          </Nav.Link>
-          <Nav.Link href="/getTasks" active={location.pathname === "/getTasks"}>
-            All Tasks
-          </Nav.Link>
-          <Nav.Link
-            href="/createTask"
-            active={location.pathname === "/createTask"}
-          >
-            New Task
-          </Nav.Link>
+          <Nav.Link href="/favoriteTasks">Favorite Tasks</Nav.Link>
+          <Nav.Link href="/getTasks">All Tasks</Nav.Link>
+          <Nav.Link href="/createTask">New Task</Nav.Link>
         </Nav>
+        <div className="d-flex align-items-center">
+          <span className="me-2">
+            {theme === "light" ? "Light Mode" : "Dark Mode"}
+          </span>
+          {/* Toggle Switch */}
+          <Switch
+            className="border border-dark"
+            onChange={toggleTheme}
+            checked={theme === "dark"}
+            onColor="#343a40"
+            offColor="#D2D2D2"
+            checkedIcon={false}
+            uncheckedIcon={false}
+            height={20}
+            width={40}
+          />
+        </div>
       </Container>
     </Navbar>
   );
