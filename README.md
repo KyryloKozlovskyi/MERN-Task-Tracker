@@ -1,5 +1,7 @@
 # MERN Task Tracker
-Welcome to the User Guide for the MERN Task Tracker. This guide describes the web app's features and provides instructions on how to use it.
+The MERN Task Tracker is a web application that helps users manage tasks. The app includes task management features, such as creating, editing, deleting, and marking tasks as favorites, all presented in a user-friendly interface, this app also supports a dynamic theme switch.
+
+Built using the MERN stack (MongoDB, Express.js, React.js, Node.js).
 
 # Installation
 1. Clone the Repository:
