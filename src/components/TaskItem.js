@@ -16,7 +16,10 @@ function TaskItem(props) {
     console.log("Task Item:", props.myTask);
   }, [props.myTask]);
 
-  // Display the uploaded image if available
+  // Display the image if available
+  // If uplImg exists, it Converts the binary image data into a Buffer object
+  // and generates a Base64 data URL for the image which browsers can use to display the image directly.
+  // If there is no uploaded image use the direct URL to an image.
   const imgUpl = props.myTask.uplImg
     ? `data:${props.myTask.uplImg.contentType};base64,${Buffer.from(
         props.myTask.uplImg.data

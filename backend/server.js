@@ -73,7 +73,7 @@ app.post("/api/tasks", upload.single("uplImg"), async (req, res) => {
     if (!title || !description || !status || !due) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-
+    // Check if an image was uploaded
     const uplImg = req.file
       ? {
           data: req.file.buffer,
@@ -81,6 +81,7 @@ app.post("/api/tasks", upload.single("uplImg"), async (req, res) => {
         }
       : null;
 
+    // Create a new task with the provided data
     const newTask = new Task({
       title,
       description,
@@ -139,14 +140,14 @@ app.put("/api/task/:id", upload.single("uplImg"), async (req, res) => {
     if (!title || !description || !status || !due) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-
+    // Check if an image was uploaded
     const uplImg = req.file
       ? {
           data: req.file.buffer,
           contentType: req.file.mimetype,
         }
       : null;
-
+    // Find the task by ID and update its data
     const updatedTask = await Task.findByIdAndUpdate(
       req.params.id,
       { title, description, status, due, image, uplImg },
